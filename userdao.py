@@ -11,7 +11,9 @@ class UserDAO():
         self.conn.close()
     
     def add_user(self, user):
-        sql = "INSERT INTO users (name, email, active) VALUES (?, ?, ?)"
+        sql = """INSERT INTO users 
+                (name, email, active) 
+                VALUES (?, ?, ?)"""
         self.conn.execute(sql, (user.name, user.email, int(user.active)))
         self.conn.commit()
     
@@ -62,31 +64,33 @@ class UserDAO():
         self.conn.execute(sql, tuple(params))
         self.conn.commit()
     
-dao = UserDAO()
+if __name__ == "__main__":
+        
+    dao = UserDAO()
 
-users = dao.get_all_users()
-#print(users)
+    users = dao.get_all_users()
+    #print(users)
 
-#Delete a user by ID
-dao.delete_user(27)
+    #Delete a user by ID
+    dao.delete_user(27)
 
-#Update a user by ID
-user_to_update = users[-1]
-user_to_update.active = not user_to_update.active
+    #Update a user by ID
+    user_to_update = users[-1]
+    user_to_update.active = not user_to_update.active
 
-dao.update_user(user_to_update.id, active=user_to_update.active)
+    dao.update_user(user_to_update.id, active=user_to_update.active)
 
 
-user = dao.get_user_by_email("fred@gmail.com")
-if user:
-    print(user.display_info())
+    user = dao.get_user_by_email("fred@gmail.com")
+    if user:
+        print(user.display_info())
 
-dao.add_user(User("Willian", "wlenert@cadence.com", True))
+    dao.add_user(User("Willian", "wlenert@cadence.com", True))
 
-users = dao.get_all_users()
-for user in users:
-    print(user.display_info())
+    users = dao.get_all_users()
+    for user in users:
+        print(user.display_info())
 
-dao.delete_user(users[-1].id)
+    dao.delete_user(users[-1].id)
 
-dao.close_connection()
+    dao.close_connection()
